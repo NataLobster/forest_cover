@@ -4,10 +4,14 @@ version = "0.1.0"
 description = ""
 authors = ["akjdshfuuiefh <nlobanok@yandex.ru>"]
 
+[tool.poetry.scripts]
+prof_data = "forest_cover.prof_data:prof"
+
 [tool.poetry.dependencies]
 python = "^3.9"
 click = "^8.0.3"
-pandas = "^1.3.4"
+pandas = "1.3.5"
+pandas-profiling = "^3.1.0"
 sklearn = "^0.0"
 scikit-learn = "^1.0.1"
 mlflow = "^1.22.0"
