@@ -8,11 +8,18 @@ This package allows you to predict the forest cover type.
 4. Install the project dependencies (*run this and following commands in a terminal, from the root of a cloned repository*):
 ```sh
 poetry install --no-dev
+```
 5. You can generate a EDA report with the following code
-```poetry run prof_data -d <path to csv with data> -s <path to save trained model>
-6. Run train with the following command:
+```sh
+poetry run prof_data -d <path to csv with data> -s <path to save report>
+```
+6. Run train with the following command (logistic regression):
 ```sh
 poetry run train -d <path to csv with data> -s <path to save trained model>
+```
+Run train with the following command (random forest):
+```sh
+poetry run train_rf -d <path to csv with data> -s <path to save trained model>
 ```
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
