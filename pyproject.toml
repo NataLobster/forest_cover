@@ -7,6 +7,7 @@ authors = ["akjdshfuuiefh <nlobanok@yandex.ru>"]
 [tool.poetry.scripts]
 prof_data = "forest_cover.prof_data:prof"
 train = "forest_cover.train:train"
+train_rf = "forest_cover.train:train_rf"
 
 [tool.poetry.dependencies]
 python = "^3.9"
