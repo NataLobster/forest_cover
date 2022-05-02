@@ -1,13 +1,9 @@
 from pathlib import Path
 from joblib import dump
 
+import numpy as np
 import click
-
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.model_selection import cross_validate
 
 from forest_cover.data import get_dataset
 from forest_cover.pipeline import create_pipeline
@@ -23,7 +19,7 @@ from forest_cover.pipeline import create_pipeline
 @click.option(
     "-s",
     "--save-model-path",
-    default="data/model_lr.joblib",
+    default="data/model.joblib",
     type=click.Path(dir_okay=False, writable=True, path_type=Path),
     show_default=True,
 )
@@ -61,6 +57,16 @@ def train(
     )
     pipeline = create_pipeline(use_scaler, classifier, logreg_c, random_state)
     pipeline.fit(features_train, target_train)
-    accuracy = accuracy_score(target_val, pipeline.predict(features_val))
-    click.echo(f"Accuracy: {accuracy}.")
+    scoring = ['accuracy','f1_weighted','roc_auc_ovr_weighted']
+    score = cross_validate(pipeline,features_train,target_train, cv=5,
+                           scoring=scoring,return_train_score=True)
+    click.echo(
+        f"Train accuracy, F1, ROC_AUC: {np.mean(score['train_accuracy'])}"
+        f",{np.mean(score['train_f1_weighted'])},"
+        f"{np.mean(score['train_roc_auc_ovr_weighted'])}.")
+    click.echo(
+        f"Test accuracy, F1, ROC_AUC: {np.mean(score['test_accuracy'])}"
+        f",{np.mean(score['test_f1_weighted'])},"
+        f"{np.mean(score['test_roc_auc_ovr_weighted'])}.")
     dump(classifier, save_model_path)
+
