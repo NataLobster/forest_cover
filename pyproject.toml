@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "forest_cover"
 version = "0.1.0"
-description = ""
-authors = ["akjdshfuuiefh <nlobanok@yandex.ru>"]
+description = "Forest cover prediction project"
+authors = ["NataLobster <nlobanok@yandex.ru>"]
 
 [tool.poetry.scripts]
 prof_data = "forest_cover.prof_data:prof"
