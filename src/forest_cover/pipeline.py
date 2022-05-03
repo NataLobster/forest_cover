@@ -15,7 +15,7 @@ def create_pipeline(
         pipeline_steps.append(
         (
             "classifier",
-            KNeighborsClassifier(),
+            KNeighborsClassifier(n_neighbors=5),
         )
         )
     elif classfier == 'RandomForestClassifier':

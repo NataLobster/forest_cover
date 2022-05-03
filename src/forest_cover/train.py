@@ -3,6 +3,8 @@ from joblib import dump
 
 import numpy as np
 import click
+import mlflow
+import mlflow.sklearn
 from sklearn.model_selection import cross_validate
 
 from forest_cover.data import get_dataset
@@ -55,18 +57,24 @@ def train(
         random_state,
         test_split_ratio,
     )
-    pipeline = create_pipeline(use_scaler, classifier, logreg_c, random_state)
-    pipeline.fit(features_train, target_train)
-    scoring = ['accuracy','f1_weighted','roc_auc_ovr_weighted']
-    score = cross_validate(pipeline,features_train,target_train, cv=5,
+    with mlflow.start_run() as run:
+        pipeline = create_pipeline(use_scaler, classifier, logreg_c, random_state)
+        pipeline.fit(features_train, target_train)
+        scoring = ['accuracy','f1_weighted','roc_auc_ovr_weighted']
+        score = cross_validate(pipeline,features_train,target_train, cv=5,
                            scoring=scoring,return_train_score=True)
-    click.echo(
-        f"Train accuracy, F1, ROC_AUC: {np.mean(score['train_accuracy'])}"
-        f",{np.mean(score['train_f1_weighted'])},"
-        f"{np.mean(score['train_roc_auc_ovr_weighted'])}.")
-    click.echo(
-        f"Test accuracy, F1, ROC_AUC: {np.mean(score['test_accuracy'])}"
-        f",{np.mean(score['test_f1_weighted'])},"
-        f"{np.mean(score['test_roc_auc_ovr_weighted'])}.")
-    dump(classifier, save_model_path)
+        mlflow.log_param("use_scaler", use_scaler)
+        mlflow.log_param("logreg_c", logreg_c)
+        mlflow.log_metric("score", np.mean(score['train_accuracy']))
+        mlflow.sklearn.log_model(pipeline, "model")
+        click.echo(
+            f"Train accuracy, F1, ROC_AUC: {np.mean(score['train_accuracy'])}"
+            f",{np.mean(score['train_f1_weighted'])},"
+            f"{np.mean(score['train_roc_auc_ovr_weighted'])}.")
+        click.echo(
+            f"Test accuracy, F1, ROC_AUC: {np.mean(score['test_accuracy'])}"
+            f",{np.mean(score['test_f1_weighted'])},"
+            f"{np.mean(score['test_roc_auc_ovr_weighted'])}.")
+        dump(classifier, save_model_path)
+        click.echo(f"Model is saved to {save_model_path}.")
 
