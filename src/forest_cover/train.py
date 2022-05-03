@@ -49,12 +49,6 @@ from forest_cover.pipeline import create_pipeline
     show_default=True,
 )
 @click.option(
-    "--n_neighbors",
-    default=5,
-    type=int,
-    show_default=True,
-)
-@click.option(
     "--weights",
     default="uniform",
     type=str,
@@ -78,6 +72,8 @@ def train(
         score = cross_validate(pipeline,features_train,target_train, cv=5,
                            scoring=scoring,return_train_score=True)
         mlflow.log_param("classifier", classifier)
+        mlflow.log_param("n_neighbors", n_neighbors)
+        mlflow.log_param("weights", weights)
         mlflow.log_metric("train_accuracy", np.mean(score['train_accuracy']))
         mlflow.log_metric("test_accuracy", np.mean(score['test_accuracy']))
         mlflow.sklearn.log_model(pipeline, "model")
