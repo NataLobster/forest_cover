@@ -21,9 +21,14 @@ Run train with the following command (random forest):
 ```sh
 poetry run train_rf -d <path to csv with data> -s <path to save trained model>
 ```
+You can use two models (KNeighborsClassifier and RandomForestClassifier) with corresponding hyperparameters
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
 poetry run train --help
+```
+6. Run MLflow UI to see the information about experiments you conducted:
+```sh
+poetry run mlflow ui
 ```
 ## Development
 
