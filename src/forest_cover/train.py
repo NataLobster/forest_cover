@@ -43,14 +43,27 @@ from forest_cover.pipeline import create_pipeline
     show_default=True,
 )
 @click.option(
-    "--logreg-c",
-    default=1.0,
-    type=float,
+    "--n-neighbors",
+    default=5,
+    type=int,
+    show_default=True,
+)
+@click.option(
+    "--n_neighbors",
+    default=5,
+    type=int,
+    show_default=True,
+)
+@click.option(
+    "--weights",
+    default="uniform",
+    type=str,
     show_default=True,
 )
 def train(
     dataset_path: Path, random_state: int, save_model_path: Path,
-    classifier: str, test_split_ratio: float, use_scaler:bool, logreg_c:float
+    classifier: str, test_split_ratio: float, use_scaler:bool, n_neighbors:int,
+    weights:str
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -58,14 +71,15 @@ def train(
         test_split_ratio,
     )
     with mlflow.start_run() as run:
-        pipeline = create_pipeline(use_scaler, classifier, logreg_c, random_state)
+        pipeline = create_pipeline(use_scaler, classifier, n_neighbors,
+                                   random_state, weights)
         pipeline.fit(features_train, target_train)
         scoring = ['accuracy','f1_weighted','roc_auc_ovr_weighted']
         score = cross_validate(pipeline,features_train,target_train, cv=5,
                            scoring=scoring,return_train_score=True)
-        mlflow.log_param("use_scaler", use_scaler)
-        mlflow.log_param("logreg_c", logreg_c)
-        mlflow.log_metric("score", np.mean(score['train_accuracy']))
+        mlflow.log_param("classifier", classifier)
+        mlflow.log_metric("train_accuracy", np.mean(score['train_accuracy']))
+        mlflow.log_metric("test_accuracy", np.mean(score['test_accuracy']))
         mlflow.sklearn.log_model(pipeline, "model")
         click.echo(
             f"Train accuracy, F1, ROC_AUC: {np.mean(score['train_accuracy'])}"

@@ -6,7 +6,8 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def create_pipeline(
-    use_scaler: bool, classfier: str, logreg_C: float, random_state: int
+    use_scaler: bool, classfier: str,  random_state: int, n_neighbors:int,
+    weights:str
 ) -> Pipeline:
     pipeline_steps = []
     if use_scaler:
@@ -15,7 +16,7 @@ def create_pipeline(
         pipeline_steps.append(
         (
             "classifier",
-            KNeighborsClassifier(n_neighbors=5),
+            KNeighborsClassifier(n_neighbors=n_neighbors, weights=weights),
         )
         )
     elif classfier == 'RandomForestClassifier':
