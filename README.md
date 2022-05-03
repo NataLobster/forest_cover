@@ -29,7 +29,9 @@ poetry run train --help
 6. Run MLflow UI to see the information about experiments you conducted:
 ```sh
 poetry run mlflow ui
-```![изображение](https://user-images.githubusercontent.com/70448060/166432179-ba8ffdbe-7f69-47ec-990a-0f19bc45b728.png)
+```
+![изображение](https://user-images.githubusercontent.com/70448060/166432179-ba8ffdbe-7f69-47ec-990a-0f19bc45b728.png)
+
 ## Development
 
 The code in this repository must be tested, formatted with black, and pass mypy typechecking before being commited to the repository.
