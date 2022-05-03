@@ -54,10 +54,22 @@ from forest_cover.pipeline import create_pipeline
     type=str,
     show_default=True,
 )
+@click.option(
+    "--n-estimators",
+    default=100,
+    type=int,
+    show_default=True,
+)
+@click.option(
+    "--max-depth",
+    default=None,
+    type=int,
+    show_default=True,
+)
 def train(
     dataset_path: Path, random_state: int, save_model_path: Path,
     classifier: str, test_split_ratio: float, use_scaler:bool, n_neighbors:int,
-    weights:str
+    weights:str, n_estimators:int, max_depth:int
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -66,7 +78,8 @@ def train(
     )
     with mlflow.start_run() as run:
         pipeline = create_pipeline(use_scaler, classifier, n_neighbors,
-                                   random_state, weights)
+                                   random_state, weights, n_estimators,
+                                   max_depth)
         pipeline.fit(features_train, target_train)
         scoring = ['accuracy','f1_weighted','roc_auc_ovr_weighted']
         score = cross_validate(pipeline,features_train,target_train, cv=5,
@@ -74,6 +87,8 @@ def train(
         mlflow.log_param("classifier", classifier)
         mlflow.log_param("n_neighbors", n_neighbors)
         mlflow.log_param("weights", weights)
+        mlflow.log_param(" n_estimators",  n_estimators)
+        mlflow.log_param("max_depth", max_depth)
         mlflow.log_metric("train_accuracy", np.mean(score['train_accuracy']))
         mlflow.log_metric("test_accuracy", np.mean(score['test_accuracy']))
         mlflow.sklearn.log_model(pipeline, "model")
