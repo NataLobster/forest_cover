@@ -6,6 +6,7 @@ import click
 import mlflow
 import mlflow.sklearn
 from sklearn.model_selection import cross_validate
+from sklearn.model_selection import KFold
 
 from forest_cover.data import get_dataset, get_dataset_svd, get_dataset_pca
 from forest_cover.pipeline import create_pipeline
@@ -96,11 +97,12 @@ def train(
             )
             pipeline.fit(features_train, target_train)
             scoring = ["accuracy", "f1_weighted", "roc_auc_ovr_weighted"]
+            kfold = KFold(n_splits=10)
             score = cross_validate(
                 pipeline,
                 features_train,
                 target_train,
-                cv=5,
+                cv=kfold,
                 scoring=scoring,
                 return_train_score=True,
             )
@@ -114,6 +116,7 @@ def train(
             mlflow.log_metric("test_accuracy", np.mean(score["test_accuracy"]))
             mlflow.sklearn.log_model(pipeline, "model")
             click.echo(
+                f"Type of feature selecting: {name_fe} \n"
                 f"Train accuracy, F1, ROC_AUC: {np.mean(score['train_accuracy'])}"
                 f",{np.mean(score['train_f1_weighted'])},"
                 f"{np.mean(score['train_roc_auc_ovr_weighted'])}."
