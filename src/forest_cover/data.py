@@ -10,7 +10,7 @@ from sklearn.decomposition import PCA
 
 def get_dataset(
     csv_path: Path, random_state: int, test_split_ratio: float
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+) -> Tuple[pd.DataFrame, pd.Series, str]:
     dataset = pd.read_csv(csv_path)
     click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
@@ -19,12 +19,13 @@ def get_dataset(
         features, target, test_size=test_split_ratio, random_state=random_state
     )
 
-    return features_train, features_val, target_train, target_val, 'None'
+    # return features_train, features_val, target_train, target_val, 'None'
+    return features, target, 'None'
 
 
 def get_dataset_svd(
     csv_path: Path, random_state: int, test_split_ratio: float
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+) -> Tuple[pd.DataFrame, pd.Series, str]:
     dataset = pd.read_csv(csv_path)
     click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
@@ -35,12 +36,13 @@ def get_dataset_svd(
         features_new, target, test_size=test_split_ratio, random_state=random_state
     )
 
-    return features_train, features_val, target_train, target_val, 'SVD'
+    # return features_train, features_val, target_train, target_val, 'SVD'
+    return features, target, 'SVD'
 
 
 def get_dataset_pca(
     csv_path: Path, random_state: int, test_split_ratio: float
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+) -> Tuple[pd.DataFrame, pd.Series, str]:
     dataset = pd.read_csv(csv_path)
     click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
@@ -51,5 +53,6 @@ def get_dataset_pca(
         features_new, target, test_size=test_split_ratio, random_state=random_state
     )
 
-    return features_train, features_val, target_train, target_val, 'PCA'
+    # return features_train, features_val, target_train, target_val, 'PCA'
+    return features, target, 'PCA'
 
