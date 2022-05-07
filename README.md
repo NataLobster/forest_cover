@@ -30,7 +30,10 @@ poetry run train --help
 ```sh
 poetry run mlflow ui
 ```
-![изображение](https://user-images.githubusercontent.com/70448060/166432179-ba8ffdbe-7f69-47ec-990a-0f19bc45b728.png)
+task8
+![изображение](https://user-images.githubusercontent.com/70448060/167249449-54e175ca-1ce5-48a3-9fe6-a9aa193eb701.png)
+![изображение](https://user-images.githubusercontent.com/70448060/167249481-33e603da-7b7b-4db1-b9f9-56a194554bdb.png)
+
 
 ## Development
 
