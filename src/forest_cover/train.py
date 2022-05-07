@@ -1,12 +1,14 @@
 from pathlib import Path
 from joblib import dump
 
+import configparser
 import numpy as np
 import click
 import mlflow
 import mlflow.sklearn
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import KFold
+from sklearn.model_selection import GridSearchCV
 
 from forest_cover.data import get_dataset, get_dataset_svd, get_dataset_pca
 from forest_cover.pipeline import create_pipeline
@@ -79,41 +81,52 @@ def train(
     n_estimators: int,
     max_depth: int,
 ) -> None:
+    scoring = ["accuracy", "f1_weighted", "roc_auc_ovr_weighted"]
+    hyper_param = dict()
+
     for choose in (get_dataset(dataset_path, random_state, test_split_ratio),
                    get_dataset_svd(dataset_path,
                                    random_state, test_split_ratio),
                    get_dataset_pca(dataset_path,
                                    random_state, test_split_ratio)):
-        features_train, features_val, target_train, target_val, name_fe = choose
+        features, target, name_fe = choose
         with mlflow.start_run() as run:
-            pipeline = create_pipeline(
+            print('start')
+            pipeline, hyper_param = create_pipeline(
                 use_scaler,
                 classifier,
-                n_neighbors,
                 random_state,
-                weights,
-                n_estimators,
-                max_depth,
             )
-            pipeline.fit(features_train, target_train)
-            scoring = ["accuracy", "f1_weighted", "roc_auc_ovr_weighted"]
-            kfold = KFold(n_splits=10)
+
+            cv_inner = KFold(n_splits=3, shuffle=True)
+            search = GridSearchCV(pipeline, hyper_param, scoring='accuracy',
+                                  n_jobs=1,
+                                  cv=cv_inner,
+                                  refit=True)
+            cv_outer = KFold(n_splits=10, shuffle=True)
             score = cross_validate(
-                pipeline,
-                features_train,
-                target_train,
-                cv=kfold,
+                search,
+                features,
+                target,
+                cv=cv_outer,
                 scoring=scoring,
                 return_train_score=True,
+                return_estimator=False
             )
             mlflow.log_param(" classifier", classifier)
-            mlflow.log_param("n_neighbors", n_neighbors)
-            mlflow.log_param("weights", weights)
-            mlflow.log_param("n_estimators", n_estimators)
-            mlflow.log_param("max_depth", max_depth)
+            mlflow.log_params(hyper_param)
+
             mlflow.log_param(" feature_engineering", name_fe)
-            mlflow.log_metric("train_accuracy", np.mean(score["train_accuracy"]))
+            mlflow.log_metric("train_accuracy",
+                              np.mean(score["train_accuracy"]))
             mlflow.log_metric("test_accuracy", np.mean(score["test_accuracy"]))
+            mlflow.log_metric("train_f1",
+                              np.mean(score["train_f1_weighted"]))
+            mlflow.log_metric("test_f1", np.mean(score["test_f1_weighted"]))
+            mlflow.log_metric("train_roc_auc",
+                              np.mean(score["train_roc_auc_ovr_weighted"]))
+            mlflow.log_metric("test_roc_auc",
+                              np.mean(score["test_roc_auc_ovr_weighted"]))
             mlflow.sklearn.log_model(pipeline, "model")
             click.echo(
                 f"Type of feature selecting: {name_fe} \n"
@@ -128,3 +141,4 @@ def train(
             )
             dump(classifier, save_model_path)
             click.echo(f"Model is saved to {save_model_path}.")
+
