@@ -3,6 +3,7 @@ from pandas_profiling import ProfileReport
 import click
 from pathlib import Path
 
+
 @click.command()
 @click.option(
     "-d",
@@ -23,5 +24,5 @@ def prof(
     save_report_path: Path,
 ) -> None:
     df = pd.read_csv(dataset_path)
-    profile = ProfileReport(df,title='Pandas Profiling Report')
+    profile = ProfileReport(df, title="Pandas Profiling Report")
     profile.to_file(save_report_path)

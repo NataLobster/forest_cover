@@ -16,7 +16,7 @@ from forest_cover.pipeline import create_pipeline
     "-d",
     "--dataset-path",
     default="data/train.csv",
-    type=click.Path(exists=True, dir_okay=False, path_type=Path)
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
 )
 @click.option(
     "-s",
@@ -33,7 +33,7 @@ from forest_cover.pipeline import create_pipeline
 )
 @click.option(
     "--classifier",
-    default='KNeighborsClassifier',
+    default="KNeighborsClassifier",
     type=str,
 )
 @click.option(
@@ -67,9 +67,16 @@ from forest_cover.pipeline import create_pipeline
     show_default=True,
 )
 def train(
-    dataset_path: Path, random_state: int, save_model_path: Path,
-    classifier: str, test_split_ratio: float, use_scaler:bool, n_neighbors:int,
-    weights:str, n_estimators:int, max_depth:int
+    dataset_path: Path,
+    random_state: int,
+    save_model_path: Path,
+    classifier: str,
+    test_split_ratio: float,
+    use_scaler: bool,
+    n_neighbors: int,
+    weights: str,
+    n_estimators: int,
+    max_depth: int,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -77,29 +84,42 @@ def train(
         test_split_ratio,
     )
     with mlflow.start_run() as run:
-        pipeline = create_pipeline(use_scaler, classifier, n_neighbors,
-                                   random_state, weights, n_estimators,
-                                   max_depth)
+        pipeline = create_pipeline(
+            use_scaler,
+            classifier,
+            n_neighbors,
+            random_state,
+            weights,
+            n_estimators,
+            max_depth,
+        )
         pipeline.fit(features_train, target_train)
-        scoring = ['accuracy','f1_weighted','roc_auc_ovr_weighted']
-        score = cross_validate(pipeline,features_train,target_train, cv=5,
-                           scoring=scoring,return_train_score=True)
+        scoring = ["accuracy", "f1_weighted", "roc_auc_ovr_weighted"]
+        score = cross_validate(
+            pipeline,
+            features_train,
+            target_train,
+            cv=5,
+            scoring=scoring,
+            return_train_score=True,
+        )
         mlflow.log_param("classifier", classifier)
         mlflow.log_param("n_neighbors", n_neighbors)
         mlflow.log_param("weights", weights)
-        mlflow.log_param(" n_estimators",  n_estimators)
+        mlflow.log_param(" n_estimators", n_estimators)
         mlflow.log_param("max_depth", max_depth)
-        mlflow.log_metric("train_accuracy", np.mean(score['train_accuracy']))
-        mlflow.log_metric("test_accuracy", np.mean(score['test_accuracy']))
+        mlflow.log_metric("train_accuracy", np.mean(score["train_accuracy"]))
+        mlflow.log_metric("test_accuracy", np.mean(score["test_accuracy"]))
         mlflow.sklearn.log_model(pipeline, "model")
         click.echo(
             f"Train accuracy, F1, ROC_AUC: {np.mean(score['train_accuracy'])}"
             f",{np.mean(score['train_f1_weighted'])},"
-            f"{np.mean(score['train_roc_auc_ovr_weighted'])}.")
+            f"{np.mean(score['train_roc_auc_ovr_weighted'])}."
+        )
         click.echo(
             f"Test accuracy, F1, ROC_AUC: {np.mean(score['test_accuracy'])}"
             f",{np.mean(score['test_f1_weighted'])},"
-            f"{np.mean(score['test_roc_auc_ovr_weighted'])}.")
+            f"{np.mean(score['test_roc_auc_ovr_weighted'])}."
+        )
         dump(classifier, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
-
