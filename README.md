@@ -13,15 +13,18 @@ poetry install --no-dev
 ```sh
 poetry run prof_data -d <path to csv with data> -s <path to save report>
 ```
-6. Run train with the following command (logistic regression):
+6. Run train with the following command :
 ```sh
 poetry run train -d <path to csv with data> -s <path to save trained model>
 ```
-Run train with the following command (random forest):
-```sh
-poetry run train_rf -d <path to csv with data> -s <path to save trained model>
-```
 You can use two models (KNeighborsClassifier and RandomForestClassifier) with corresponding hyperparameters
+for example, with
+```sh
+poetry run train --classifier RandomForestClassifier --n-estimators 200 --max-depth 10
+```
+output is (for task7):
+![изображение](https://user-images.githubusercontent.com/70448060/167253224-f9578bd3-c263-4e12-b4a5-43f1c4f1173c.png)
+
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
 poetry run train --help
@@ -31,8 +34,8 @@ poetry run train --help
 poetry run mlflow ui
 ```
 task8
-![изображение](https://user-images.githubusercontent.com/70448060/167249449-54e175ca-1ce5-48a3-9fe6-a9aa193eb701.png)
-![изображение](https://user-images.githubusercontent.com/70448060/167249481-33e603da-7b7b-4db1-b9f9-56a194554bdb.png)
+![изображение](https://user-images.githubusercontent.com/70448060/167253279-360f1b76-73cb-4188-ac8f-6b2864df89f4.png)
+![изображение](https://user-images.githubusercontent.com/70448060/167253343-95d29090-355c-4d12-bd60-ddbc31600940.png)
 
 
 ## Development
