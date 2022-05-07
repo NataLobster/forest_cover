@@ -19,7 +19,7 @@ def get_dataset(
         features, target, test_size=test_split_ratio, random_state=random_state
     )
 
-    return features_train, features_val, target_train, target_val
+    return features_train, features_val, target_train, target_val, 'None'
 
 
 def get_dataset_svd(
@@ -29,13 +29,13 @@ def get_dataset_svd(
     click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
     target = dataset["Cover_Type"]
-    svd = TruncatedSVD(n_components=20, random_state=42)
+    svd = TruncatedSVD(n_components=30, random_state=42)
     features_new = svd.fit_transform(features)
     features_train, features_val, target_train, target_val = train_test_split(
         features_new, target, test_size=test_split_ratio, random_state=random_state
     )
 
-    return features_train, features_val, target_train, target_val
+    return features_train, features_val, target_train, target_val, 'SVD'
 
 
 def get_dataset_pca(
@@ -45,11 +45,11 @@ def get_dataset_pca(
     click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
     target = dataset["Cover_Type"]
-    pca = PCA(n_components=20, random_state=42)
+    pca = PCA(n_components=30, random_state=42)
     features_new = pca.fit_transform(features)
     features_train, features_val, target_train, target_val = train_test_split(
         features_new, target, test_size=test_split_ratio, random_state=random_state
     )
 
-    return features_train, features_val, target_train, target_val
+    return features_train, features_val, target_train, target_val, 'PCA'
 
