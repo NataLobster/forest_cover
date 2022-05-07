@@ -106,7 +106,7 @@ def train(
         mlflow.log_param("classifier", classifier)
         mlflow.log_param("n_neighbors", n_neighbors)
         mlflow.log_param("weights", weights)
-        mlflow.log_param(" n_estimators", n_estimators)
+        mlflow.log_param("n_estimators", n_estimators)
         mlflow.log_param("max_depth", max_depth)
         mlflow.log_metric("train_accuracy", np.mean(score["train_accuracy"]))
         mlflow.log_metric("test_accuracy", np.mean(score["test_accuracy"]))
