@@ -42,3 +42,5 @@ poetry install
 ```
 task12
 ![изображение](https://user-images.githubusercontent.com/70448060/166528660-0e44c37c-9390-444b-969e-7ba206e21cd3.png)
+![изображение](https://user-images.githubusercontent.com/70448060/167245738-b24ceb83-da62-4faa-92cb-530bba85b608.png)
+
