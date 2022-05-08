@@ -32,7 +32,7 @@ def create_pipeline(
         )
 
     # большая печалька, но не хочет работать через ini из train
-    """config = configparser.ConfigParser()  # создаём объекта парсера
+    config = configparser.ConfigParser()  # создаём объекта парсера
     config.read("train.ini")  # читаем конфиг
 
     hyper_param = dict(config[classifier])
@@ -40,19 +40,22 @@ def create_pipeline(
     for key in hyper_param.keys():
         hyper_param[key] = list(hyper_param[key].split(','))
         for i in range(len(hyper_param[key])):
-            try:
-                hyper_param[key][i] = int(hyper_param[key][i])
-
-            except Exception:
-                pass"""
-    if classifier == "KNeighborsClassifier":
+            if hyper_param[key][i]=='None':
+                hyper_param[key][i] = None
+            else:
+                try:
+                    hyper_param[key][i] = int(hyper_param[key][i])
+                except Exception:
+                    pass
+    """if classifier == "KNeighborsClassifier":
         hyper_param = dict()
         hyper_param['classifier__n_neighbors'] = [3, 5, 8]
         hyper_param['classifier__weights'] = ['uniform', 'distance']
     if classifier == "RandomForestClassifier":
         hyper_param = dict()
         hyper_param['classifier__n_estimators'] = [100, 200, 500]
-        hyper_param['classifier__max_depth'] = [10, 20, None]
+        hyper_param['classifier__max_depth'] = [10, 20, None]"""
+    print(hyper_param)
 
     return Pipeline(steps=pipeline_steps), hyper_param
 
