@@ -46,11 +46,28 @@ Install all requirements (including dev requirements) to poetry environment:
 ```
 poetry install
 ```
+Then you can run 
+```
+poetry run black src
+```
+```
+poetry run flake8 src
+```
 task12
 ![изображение](https://user-images.githubusercontent.com/70448060/166528660-0e44c37c-9390-444b-969e-7ba206e21cd3.png)
 ![изображение](https://user-images.githubusercontent.com/70448060/167245738-b24ceb83-da62-4faa-92cb-530bba85b608.png)
 
+ ```
+poetry run mypy src
+```
 task13
 ![изображение](https://user-images.githubusercontent.com/70448060/167246245-b7989243-c51c-41bf-8548-ccac3f8bb1a7.png)
+
+Or combine it into a single command
+```
+poetry run nox
+```
+task14
+![изображение](https://user-images.githubusercontent.com/70448060/167295998-61b844ea-744e-432a-bbde-37496fb44726.png)
 
 
