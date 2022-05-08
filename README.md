@@ -51,7 +51,7 @@ Then you can run
 poetry run black src
 ```
 ```
-poetry run flake8 src
+poetry run flake8
 ```
 task12
 ![изображение](https://user-images.githubusercontent.com/70448060/166528660-0e44c37c-9390-444b-969e-7ba206e21cd3.png)
