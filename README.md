@@ -47,7 +47,7 @@ task8
 or after implementing task9
 ![изображение](https://user-images.githubusercontent.com/70448060/167372667-f245c406-6434-46d0-b710-658e30878132.png)
 
-###Pay attention that nested cv takes a lot of time for some models
+### Pay attention that nested cv takes a lot of time for some models
 
 ## Development
 
