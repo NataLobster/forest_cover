@@ -11,9 +11,9 @@ def get_dataset(
     csv_path: Path, random_state: int, test_split_ratio: float
 ) -> Tuple[pd.DataFrame, pd.Series, str]:
     dataset = pd.read_csv(csv_path)
-    click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
     target = dataset["Cover_Type"]
+    click.echo(f"Dataset shape: {features.shape}.")
     # features_train, features_val, target_train,
     # target_val = train_test_split(
     #    features, target, test_size=test_split_ratio,
@@ -28,11 +28,11 @@ def get_dataset_svd(
     csv_path: Path, random_state: int, test_split_ratio: float
 ) -> Tuple[pd.DataFrame, pd.Series, str]:
     dataset = pd.read_csv(csv_path)
-    click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
     target = dataset["Cover_Type"]
     svd = TruncatedSVD(n_components=30, random_state=42)
     features_new = svd.fit_transform(features)
+    click.echo(f"Dataset shape: {features_new.shape}.")
     # features_train, features_val, target_train,
     # target_val = train_test_split(
     #    features_new, target, test_size=test_split_ratio,
@@ -47,11 +47,11 @@ def get_dataset_pca(
     csv_path: Path, random_state: int, test_split_ratio: float
 ) -> Tuple[pd.DataFrame, pd.Series, str]:
     dataset = pd.read_csv(csv_path)
-    click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
     target = dataset["Cover_Type"]
     pca = PCA(n_components=30, random_state=42)
     features_new = pca.fit_transform(features)
+    click.echo(f"Dataset shape: {features_new.shape}.")
     # features_train, features_val, target_train,
     # target_val = train_test_split(
     #    features_new, target, test_size=test_split_ratio,

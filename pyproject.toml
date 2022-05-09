@@ -7,7 +7,7 @@ authors = ["NataLobster <nlobanok@yandex.ru>"]
 [tool.poetry.scripts]
 prof_data = "forest_cover.prof_data:prof"
 train = "forest_cover.train:train"
-train_rf = "forest_cover.train:train_rf"
+predict_fc = "forest_cover.predict_fc:train"
 
 [tool.poetry.dependencies]
 python = "^3.9"
