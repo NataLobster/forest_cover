@@ -17,12 +17,19 @@ poetry run prof_data -d <path to csv with data> -s <path to save report>
 ```sh
 poetry run train -d <path to csv with data> -s <path to save trained model>
 ```
-You can use two models (KNeighborsClassifier and RandomForestClassifier) with corresponding hyperparameters
+You can use two models (KNeighborsClassifier, RandomForestClassifier, ExtraTreesClassifier) with corresponding hyperparameters
 for example, with
 ```sh
 poetry run train --classifier RandomForestClassifier --n-estimators 200 --max-depth 10
 ```
-output is (for task7):
+(this was relevant before the implementation of task 9)  
+Now hyperparameters are set in the train.ini file. You should specify just classifier, path or type of feature engineering (None, PCA,SVD)
+for example
+```sh
+poetry run train --classifier RandomForestClassifier --feature-eng PCA
+```
+
+output for task7:
 ![изображение](https://user-images.githubusercontent.com/70448060/167253224-f9578bd3-c263-4e12-b4a5-43f1c4f1173c.png)
 
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
@@ -36,6 +43,8 @@ poetry run mlflow ui
 task8
 ![изображение](https://user-images.githubusercontent.com/70448060/167253279-360f1b76-73cb-4188-ac8f-6b2864df89f4.png)
 ![изображение](https://user-images.githubusercontent.com/70448060/167253343-95d29090-355c-4d12-bd60-ddbc31600940.png)
+
+or after implementing task9
 
 
 ## Development
