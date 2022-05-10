@@ -56,11 +56,11 @@ def train(
     test_split_ratio: float,
     feature_eng: str,
     classifier: str,
-    use_scaler: bool
+    use_scaler: bool,
 ) -> None:
     hyper_param: Dict[Any, Any]
     hyper_param = dict()  # "hyper_param: Dict[<type>, <type>]
-
+    # get data
     if feature_eng is None:
         features, target, name_fe = get_dataset(
             dataset_path, random_state, test_split_ratio
@@ -78,7 +78,7 @@ def train(
         classifier,
         random_state,
     )
-
+    # tune hyperparameters
     cv_inner = KFold(n_splits=5, shuffle=True)
     search = GridSearchCV(
         pipeline,
@@ -92,14 +92,10 @@ def train(
     dump(classifier, save_model_path)
     click.echo(f"best_params {search.best_params_}.")
     click.echo(f"best_score {search.best_score_}.")
-
+    # get prediction for test.csv
     dataset = pd.read_csv("data/test.csv")
     predictions = search.predict(dataset)
 
-    submission = pd.DataFrame({
-        "Id": dataset["Id"],
-        "Cover_Type": predictions
-    })
+    submission = pd.DataFrame({"Id": dataset["Id"], "Cover_Type": predictions})
 
     submission.to_csv("data/forest-cover-submission.csv", index=False)
-

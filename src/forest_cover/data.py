@@ -7,6 +7,7 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import PCA
 
 
+# get clear data
 def get_dataset(
     csv_path: Path, random_state: int, test_split_ratio: float
 ) -> Tuple[pd.DataFrame, pd.Series, str]:
@@ -24,6 +25,7 @@ def get_dataset(
     return features, target, "None"
 
 
+# get data with svd transform
 def get_dataset_svd(
     csv_path: Path, random_state: int, test_split_ratio: float
 ) -> Tuple[pd.DataFrame, pd.Series, str]:
@@ -43,6 +45,7 @@ def get_dataset_svd(
     return features_new, target, "SVD"
 
 
+# get data with pca transform
 def get_dataset_pca(
     csv_path: Path, random_state: int, test_split_ratio: float
 ) -> Tuple[pd.DataFrame, pd.Series, str]:

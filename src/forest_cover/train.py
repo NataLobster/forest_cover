@@ -91,8 +91,9 @@ def train(
 ) -> None:
     scoring = ["accuracy", "f1_weighted", "roc_auc_ovr_weighted"]
     hyper_param: Dict[Any, Any]
-    hyper_param = dict()  # "hyper_param: Dict[<type>, <type>]
+    hyper_param = dict()
 
+    # get features
     if feature_eng is None:
         features, target, name_fe = get_dataset(
             dataset_path, random_state, test_split_ratio
@@ -111,7 +112,7 @@ def train(
             classifier,
             random_state,
         )
-
+        # inner loop for nested cv
         cv_inner = KFold(n_splits=3, shuffle=True)
         search = GridSearchCV(
             pipeline,
@@ -121,6 +122,7 @@ def train(
             cv=cv_inner,
             refit=True,
         )
+        # outer loop for nested cv
         cv_outer = KFold(n_splits=10, shuffle=True)
         score = cross_validate(
             search,

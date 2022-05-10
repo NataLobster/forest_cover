@@ -38,7 +38,7 @@ def create_pipeline(
             )
         )
 
-    # большая печалька, но не хочет работать через ini из train
+    # получаем список гиперпараметров из ini
     config = configparser.ConfigParser()  # создаём объекта парсера
     config.read("train.ini")  # читаем конфиг
     hyper_param: Dict[Any, Any]

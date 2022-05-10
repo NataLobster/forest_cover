@@ -19,6 +19,7 @@ from pathlib import Path
     type=click.Path(dir_okay=False, writable=True, path_type=Path),
     show_default=True,
 )
+# формируем и сохраняем в файл отчет
 def prof(
     dataset_path: Path,
     save_report_path: Path,
